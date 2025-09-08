@@ -14,7 +14,7 @@ export class WorldMap {
                 north: 'forest_path',
                 east: 'village',
                 west: 'river_bank',
-                south: 'crossroads'
+                south: 'bridge'
             },
             items: [],
             enemies: [],
@@ -222,7 +222,7 @@ export class WorldMap {
             description: 'The southern entrance to the village. Guards keep watch for travelers and threats.',
             exits: {
                 north: 'village',
-                south: 'crossroads'
+                west: 'bridge'
             },
             items: [],
             enemies: [],
@@ -279,6 +279,7 @@ export class WorldMap {
                 north: 'forest_entrance',
                 south: 'crossroads',
                 west: 'river_bank',
+                east: 'village_gate',
                 under: 'troll_lair'
             },
             items: [],
@@ -306,8 +307,7 @@ export class WorldMap {
             exits: {
                 north: 'bridge',
                 south: 'road_west',
-                east: 'road_south',
-                west: 'troll_lair'
+                east: 'road_south'
             },
             items: [],
             enemies: ['bandit'],
@@ -358,16 +358,16 @@ export class WorldMap {
         // West is left (decreasing col), East is right (increasing col)
         
         const mapGrid = [
-            ['   ', '   ', 'THL', '   ', '   ', '   ', '   '],  // Row 0 (North)
-            ['   ', '   ', 'TRE', '   ', '   ', '   ', '   '],
-            ['   ', 'SPI', 'DEP', 'CLR', '   ', '   ', '   '],
-            ['   ', '   ', 'FOR', '   ', '   ', 'TMP', 'CPC'],
-            ['   ', '   ', '   ', '   ', 'BLK', 'MKT', 'GEN'],
-            ['WAT', 'RIV', 'FEN', 'VIL', 'INN', '   ', '   '],
-            ['HCV', '   ', 'BRG', '   ', 'VGT', '   ', '   '],
-            ['   ', 'TRL', 'CRO', '   ', 'RSO', '   ', '   '],
-            ['   ', '   ', 'RWE', '   ', '   ', '   ', '   '],
-            ['   ', '   ', '   ', '   ', 'REA', '   ', '   ']   // Row 9 (South)
+            [' ', ' ', '◊', ' ', ' ', ' ', ' '],  // Row 0 (North) - Tree Hollow
+            [' ', ' ', '♠', ' ', ' ', ' ', ' '],  // Ancient Tree
+            [' ', '◈', '▲', '○', ' ', ' ', ' '],  // Spider/Deep Forest/Clearing
+            [' ', ' ', '♣', ' ', ' ', '†', '☠'],  // Forest Path/Temple/Crypt
+            [' ', ' ', ' ', ' ', '⚒', '◉', '□'],  // Blacksmith/Market/Store
+            ['≈', '~', '※', '▪', '◎', ' ', ' '],  // Water/River/Forest Entrance/Village/Inn
+            ['◇', ' ', '═', ' ', '▼', ' ', ' '],  // Cave/Bridge/Gate
+            [' ', '⚔', '✕', ' ', '↓', ' ', ' '],  // Troll/Crossroads/Road South
+            [' ', ' ', '←', ' ', ' ', ' ', ' '],  // Road West
+            [' ', ' ', ' ', ' ', '→', ' ', ' ']   // Row 9 (South) - Road East
         ];
 
         const locationMap = {
@@ -406,19 +406,6 @@ export class WorldMap {
             'road_east': [9, 4]
         };
 
-        // Create display grid with current position marked
-        const displayGrid = mapGrid.map(row => [...row]);
-        const currentPos = locationMap[currentLocationId];
-        
-        if (currentPos) {
-            const [row, col] = currentPos;
-            // Mark current position with brackets
-            const location = displayGrid[row][col];
-            if (location && location.trim()) {
-                displayGrid[row][col] = `[${location.trim()}]`;
-            }
-        }
-
         // Build the map display with legend
         let mapDisplay = '\n╔════════════════════════════════════════════╗\n';
         mapDisplay += '║                 WORLD MAP                  ║\n';
@@ -430,20 +417,39 @@ export class WorldMap {
         mapDisplay += '║     S                                      ║\n';
         mapDisplay += '╠════════════════════════════════════════════╣\n';
         
-        // Add the map grid
-        for (let row of displayGrid) {
-            mapDisplay += '║ ' + row.join('  ').padEnd(42) + ' ║\n';
+        // Add the map grid with proper spacing
+        const currentPos = locationMap[currentLocationId];
+        for (let rowIdx = 0; rowIdx < mapGrid.length; rowIdx++) {
+            let rowStr = '║  ';
+            for (let colIdx = 0; colIdx < mapGrid[rowIdx].length; colIdx++) {
+                const symbol = mapGrid[rowIdx][colIdx];
+                // Check if this is the current position
+                if (currentPos && currentPos[0] === rowIdx && currentPos[1] === colIdx && symbol.trim()) {
+                    // Add brackets around current position
+                    rowStr += `[${symbol}]`;
+                } else {
+                    // Add normal symbol with spacing to match bracketed items
+                    rowStr += ` ${symbol} `;
+                }
+                // Add spacing between columns
+                if (colIdx < mapGrid[rowIdx].length - 1) {
+                    rowStr += ' ';
+                }
+            }
+            mapDisplay += rowStr.padEnd(45) + '║\n';
         }
         
         mapDisplay += '╠════════════════════════════════════════════╣\n';
         mapDisplay += '║ LEGEND:                                    ║\n';
-        mapDisplay += '║ [XXX] = You are here                       ║\n';
-        mapDisplay += '║ FEN = Forest Entrance   VIL = Village      ║\n';
-        mapDisplay += '║ FOR = Forest Path       INN = Inn          ║\n';
-        mapDisplay += '║ DEP = Deep Forest       MKT = Market       ║\n';
-        mapDisplay += '║ TRE = Ancient Tree      TMP = Temple       ║\n';
-        mapDisplay += '║ RIV = River Bank        BRG = Bridge       ║\n';
-        mapDisplay += '║ CRO = Crossroads        Other locations... ║\n';
+        mapDisplay += '║ [X] = You are here                         ║\n';
+        mapDisplay += '║ ※ = Forest Entrance    ▪ = Village         ║\n';
+        mapDisplay += '║ ♣ = Forest Path        ◎ = Inn             ║\n';
+        mapDisplay += '║ ▲ = Deep Forest        ◉ = Market          ║\n';
+        mapDisplay += '║ ♠ = Ancient Tree       † = Temple          ║\n';
+        mapDisplay += '║ ~ = River Bank         ═ = Bridge          ║\n';
+        mapDisplay += '║ ✕ = Crossroads         ◊ = Tree Hollow     ║\n';
+        mapDisplay += '║ ◈ = Spider Nest        ○ = Clearing        ║\n';
+        mapDisplay += '║ ≈ = Waterfall          ◇ = Hidden Cave     ║\n';
         mapDisplay += '╚════════════════════════════════════════════╝\n';
         
         return mapDisplay;

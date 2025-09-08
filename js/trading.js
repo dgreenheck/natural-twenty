@@ -19,38 +19,37 @@ export class Trading {
     talkToNPC(npcId, topic = 'greeting') {
         const npc = this.initializeNPC(npcId);
         
-        let output = '';
+        // Build colored output
+        this.ui.addOutput(npc.name + ':', 'npc-name');
+        this.ui.addOutput(`"${npc.talk(topic)}"`, 'dialogue');
         
         if (topic === 'greeting') {
-            output += `\n${npc.name}:\n`;
-            output += `"${npc.talk(topic)}"\n`;
-            
             if (npc.canTrade()) {
-                output += '\n[You can TRADE with this NPC or ask about specific topics]';
+                this.ui.addOutput('\n[You can TRADE with this NPC or ask about specific topics]', 'option');
             } else {
-                output += '\n[You can ask about specific topics]';
+                this.ui.addOutput('\n[You can ask about specific topics]', 'option');
             }
             
             // Show available topics
             const topics = Object.keys(npc.dialogue.responses);
             if (topics.length > 0) {
-                output += `\nTry asking about: ${topics.slice(0, 4).join(', ')}...`;
-            }
-        } else {
-            output += `\n${npc.name}:\n`;
-            output += `"${npc.talk(topic)}"`;
-            
-            // Special actions based on NPC
-            if (npc.id === 'priest' && topic === 'heal') {
-                const healed = this.game.player.heal(20);
-                output += `\n\n✨ You have been healed for ${healed} HP!`;
-            } else if (npc.id === 'priest' && topic === 'blessing') {
-                output += '\n\n✨ You feel blessed! (+1 to all rolls for 10 turns)';
-                this.game.player.blessed = 10;
+                const topicList = topics.slice(0, 4).map(t => 
+                    `<span class="option-text">${t}</span>`
+                ).join(', ');
+                this.ui.addOutput(`Try asking about: ${topicList}...`, '', true);
             }
         }
         
-        return output;
+        // Special actions based on NPC
+        if (npc.id === 'priest' && topic === 'heal') {
+            const healed = this.game.player.heal(20);
+            this.ui.addOutput(`\n✨ You have been healed for ${healed} HP!`, 'heal');
+        } else if (npc.id === 'priest' && topic === 'blessing') {
+            this.ui.addOutput('\n✨ You feel blessed! (+1 to all rolls for 10 turns)', 'holy');
+            this.game.player.blessed = 10;
+        }
+        
+        return ''; // Return empty since we're directly adding to UI
     }
     
     startTrading(npcId) {

@@ -202,19 +202,19 @@ Type 'look' to examine your surroundings.
             return result.message;
         }
         
-        let output = `\n${result.message}\n`;
-        output += this.describeLocation(result.location);
+        this.ui.addOutput(`\n${result.message}`, 'info');
+        this.describeLocation(result.location);
         
         // Check for enemies
         if (result.location.enemies && result.location.enemies.length > 0) {
             const enemyChance = Math.random();
             if (enemyChance < 0.3) {
                 const enemyType = result.location.enemies[Math.floor(Math.random() * result.location.enemies.length)];
-                output += '\n' + this.combat.startCombat(enemyType);
+                return this.combat.startCombat(enemyType);
             }
         }
         
-        return output;
+        return '';
     }
 
     look() {
@@ -227,35 +227,40 @@ Type 'look' to examine your surroundings.
             return 'You are in a void. This shouldn\'t happen!';
         }
         
-        return this.describeLocation(location);
+        this.describeLocation(location);
+        return ''; // Return empty since describeLocation outputs directly
     }
     
     describeLocation(location) {
-        let output = `📍 ${location.name}\n`;
-        output += `${location.description}\n\n`;
+        // Use colored output for better readability
+        this.ui.addOutput(`📍 ${location.name}`, 'location');
+        this.ui.addOutput(location.description, 'description');
         
-        // Show exits
+        // Show exits with colors
         const exits = Object.keys(location.exits);
         if (exits.length > 0) {
-            output += `Exits: ${exits.join(', ')}\n`;
+            const exitList = exits.map(e => `<span class="action-text">${e}</span>`).join(', ');
+            this.ui.addOutput(`\nExits: ${exitList}`, '', true);
         }
         
-        // Show items
+        // Show items with colors
         if (location.items && location.items.length > 0) {
-            output += `Items here: ${location.items.join(', ')}\n`;
+            const itemList = location.items.map(i => `<span class="item-name">${i}</span>`).join(', ');
+            this.ui.addOutput(`Items here: ${itemList}`, '', true);
         }
         
-        // Show NPCs with proper names
+        // Show NPCs with proper names and colors
         if (location.npcs && location.npcs.length > 0) {
             const npcList = this.trading.listNPCsInLocation(this.game.currentLocation);
             if (npcList.length > 0) {
-                output += `People here: `;
-                output += npcList.map(npc => `${npc.name}${npc.canTrade ? ' (merchant)' : ''}`).join(', ');
-                output += '\n';
+                const npcHtml = npcList.map(npc => 
+                    `<span class="npc-name">${npc.name}</span>${npc.canTrade ? ' <span class="option-text">(merchant)</span>' : ''}`
+                ).join(', ');
+                this.ui.addOutput(`People here: ${npcHtml}`, '', true);
             }
         }
         
-        return output;
+        return ''; // Return empty since we're directly outputting
     }
     
     showMap() {

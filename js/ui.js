@@ -1,19 +1,29 @@
+import { ColorTheme } from './theme.js';
+
 export class UI {
     constructor() {
         this.outputElement = document.getElementById('output');
         this.inputElement = document.getElementById('command-input');
         this.maxOutputLines = 1000;
         this.outputLines = [];
+        this.theme = ColorTheme;
     }
 
-    addOutput(text, className = '') {
+    addOutput(text, className = '', useHtml = false) {
         const timestamp = new Date().toLocaleTimeString();
         
         const line = document.createElement('div');
         if (className) {
-            line.className = className;
+            // Map old class names to new theme classes
+            const themeClass = this.mapToThemeClass(className);
+            line.className = themeClass;
         }
-        line.textContent = text;
+        
+        if (useHtml) {
+            line.innerHTML = text;
+        } else {
+            line.textContent = text;
+        }
         
         this.outputElement.appendChild(line);
         this.outputLines.push(line);
@@ -24,6 +34,28 @@ export class UI {
         }
         
         this.scrollToBottom();
+    }
+    
+    mapToThemeClass(className) {
+        const classMap = {
+            'command-echo': 'msg-command',
+            'error': 'msg-error',
+            'success': 'msg-success',
+            'info': 'msg-info',
+            'warning': 'msg-warning',
+            'combat': 'msg-combat',
+            'item': 'msg-item',
+            'location': 'msg-location',
+            'dialogue': 'msg-dialogue',
+            'npc-name': 'msg-npc-name'
+        };
+        
+        return classMap[className] || `msg-${className}`;
+    }
+    
+    addColoredOutput(parts) {
+        const formattedText = this.theme.formatMessage(parts);
+        this.addOutput(formattedText, '', true);
     }
 
     clearOutput() {
@@ -143,26 +175,31 @@ export class UI {
 
     showCombatLog(attacker, defender, damage, hit) {
         if (hit) {
-            this.addOutput(`⚔️ ${attacker} hits ${defender} for ${damage} damage!`, 'combat');
+            const html = `⚔️ <span class="npc-name">${attacker}</span> hits <span class="enemy">${defender}</span> for <span class="damage-amount">${damage} damage</span>!`;
+            this.addOutput(html, 'combat', true);
         } else {
-            this.addOutput(`✗ ${attacker} misses ${defender}!`, 'combat');
+            const html = `✗ <span class="npc-name">${attacker}</span> misses <span class="enemy">${defender}</span>!`;
+            this.addOutput(html, 'miss', true);
         }
     }
 
     showLootMessage(item, quantity = 1) {
         if (quantity > 1) {
-            this.addOutput(`✨ You found ${quantity}x ${item}!`, 'item');
+            const html = `✨ You found ${quantity}x <span class="item-name">${item}</span>!`;
+            this.addOutput(html, '', true);
         } else {
-            this.addOutput(`✨ You found ${item}!`, 'item');
+            const html = `✨ You found <span class="item-name">${item}</span>!`;
+            this.addOutput(html, '', true);
         }
     }
 
     showLocationDescription(name, description) {
         this.addOutput(`\n📍 ${name}`, 'location');
-        this.addOutput(description, 'location');
+        this.addOutput(description, 'description');
     }
 
     showDialogue(speaker, text) {
-        this.addOutput(`\n${speaker}: "${text}"`, 'dialogue');
+        const html = `\n<span class="npc-name">${speaker}</span>: "<span class="msg-dialogue">${text}</span>"`;
+        this.addOutput(html, '', true);
     }
 }

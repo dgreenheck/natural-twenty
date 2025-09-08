@@ -68,37 +68,172 @@ body {
     line-height: 1.6;
 }
 
-#output .command-echo {
-    color: #888;
+/* Import theme colors */
+/* Base message types */
+.msg-default { color: #00ff00; }
+.msg-command { color: #888888; font-style: italic; }
+.msg-error { color: #ff4444; }
+.msg-success { color: #44ff44; }
+.msg-info { color: #4488ff; }
+.msg-warning { color: #ff8844; }
+
+/* NPC & Dialogue */
+.msg-npc-name { 
+    color: #ff44ff; 
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(255, 68, 255, 0.25);
+}
+.msg-dialogue { 
+    color: #ffaaff; 
+    font-style: italic;
+}
+.msg-player-dialogue { 
+    color: #aaffaa; 
+    font-style: italic;
+}
+.msg-narrator { 
+    color: #888888; 
     font-style: italic;
 }
 
-#output .error {
-    color: #ff4444;
+/* Locations */
+.msg-location { 
+    color: #44ffff; 
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(68, 255, 255, 0.25);
+}
+.msg-direction { color: #88ccff; }
+.msg-description { color: #bbbbbb; }
+
+/* Combat */
+.msg-combat { color: #ff8844; }
+.msg-damage { 
+    color: #ff4444; 
+    font-weight: bold;
+}
+.msg-heal { 
+    color: #44ff44; 
+    font-weight: bold;
+}
+.msg-critical { 
+    color: #ffff44; 
+    font-weight: bold;
+    text-shadow: 0 0 10px #ffff44;
+    animation: pulse 0.5s ease-in-out;
+}
+.msg-miss { 
+    color: #888888; 
+    opacity: 0.8;
+}
+.msg-enemy { 
+    color: #ff6666; 
+    font-weight: bold;
 }
 
-#output .success {
-    color: #44ff44;
+/* Items */
+.msg-item { 
+    color: #ffff44; 
+    font-weight: bold;
+}
+.msg-legendary { 
+    color: #ff44ff; 
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff44ff;
+    animation: shimmer 2s infinite;
+}
+.msg-rare { 
+    color: #4444ff; 
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(68, 68, 255, 0.25);
+}
+.msg-common { color: #aaaaaa; }
+.msg-gold { 
+    color: #ffdd44; 
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(255, 221, 68, 0.25);
 }
 
-#output .info {
-    color: #4444ff;
+/* Stats */
+.msg-stat-positive { color: #44ff44; }
+.msg-stat-negative { color: #ff4444; }
+.msg-stat-neutral { color: #ffff44; }
+.msg-xp { color: #bb44ff; }
+.msg-level { 
+    color: #44ffff; 
+    font-weight: bold;
+}
+.msg-level-up { 
+    color: #ffff44; 
+    font-weight: bold;
+    font-size: 1.1em;
+    text-shadow: 0 0 10px #ffff44;
+    animation: levelUp 1s ease-in-out;
 }
 
-#output .combat {
-    color: #ff8844;
+/* Actions & Options */
+.msg-action { 
+    color: #ffaa44; 
+    font-weight: bold;
+}
+.msg-option { 
+    color: #44aaff; 
+    cursor: pointer;
+    text-decoration: underline;
+}
+.msg-option:hover {
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+.msg-disabled { 
+    color: #666666; 
+    opacity: 0.5;
+    text-decoration: line-through;
 }
 
-#output .item {
-    color: #ffff44;
+/* Magic & Effects */
+.msg-magic { 
+    color: #ff44ff; 
+    text-shadow: 0 0 5px rgba(255, 68, 255, 0.25);
+}
+.msg-poison { color: #44ff44; }
+.msg-fire { 
+    color: #ff6644; 
+    text-shadow: 0 0 5px rgba(255, 102, 68, 0.25);
+}
+.msg-ice { 
+    color: #44ddff; 
+    text-shadow: 0 0 5px rgba(68, 221, 255, 0.25);
+}
+.msg-holy { 
+    color: #ffffaa; 
+    text-shadow: 0 0 10px rgba(255, 255, 170, 0.25);
+}
+.msg-dark { 
+    color: #aa44ff; 
+    text-shadow: 0 0 5px rgba(170, 68, 255, 0.25);
 }
 
-#output .location {
-    color: #44ffff;
+/* Inline spans for mixed colors */
+.npc-name { color: #ff44ff; font-weight: bold; }
+.item-name { color: #ffff44; }
+.gold-amount { color: #ffdd44; }
+.damage-amount { color: #ff4444; }
+.heal-amount { color: #44ff44; }
+.location-name { color: #44ffff; }
+.action-text { color: #ffaa44; }
+.option-text { color: #44aaff; }
+
+/* Animations */
+@keyframes shimmer {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
 }
 
-#output .dialogue {
-    color: #ff44ff;
+@keyframes levelUp {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
 
 #input-container {
