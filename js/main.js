@@ -98,8 +98,9 @@ class DnDGame {
     displayWelcome() {
         const welcomeText = `
 ╔══════════════════════════════════════════════════╗
-║         WELCOME TO D&D TEXT ADVENTURE            ║
+║              WELCOME TO NATURAL TWENTY           ║
 ╚══════════════════════════════════════════════════╝
+                    🎲 Roll for Adventure! 🎲
 
 You awaken in a mysterious realm filled with danger and adventure.
 Your destiny awaits...
