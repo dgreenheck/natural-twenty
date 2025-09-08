@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Text Adventure</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="title-bar">
+            <h1>⚔️ D&D Text Adventure ⚔️</h1>
+            <div id="status-bar">
+                <span id="player-hp">HP: --/--</span>
+                <span id="player-level">LVL: --</span>
+                <span id="player-gold">Gold: --</span>
+                <span id="player-location">Location: --</span>
+            </div>
+        </div>
+        
+        <div id="output-container">
+            <div id="output"></div>
+        </div>
+        
+        <div id="input-container">
+            <span class="prompt">&gt;</span>
+            <input type="text" id="command-input" autofocus placeholder="Enter command...">
+            <button id="help-btn" title="Show Commands">?</button>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚔️ Game Commands ⚔️</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="command-section">
+                    <h3>BASIC COMMANDS</h3>
+                    <div class="command-list">
+                        <div class="command"><span class="cmd">help</span> - Show this help menu</div>
+                        <div class="command"><span class="cmd">stats</span> - View your character stats</div>
+                        <div class="command"><span class="cmd">clear</span> - Clear the screen</div>
+                        <div class="command"><span class="cmd">start</span> - Begin your adventure</div>
+                        <div class="command"><span class="cmd">restart</span> - Restart the game</div>
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3>MOVEMENT</h3>
+                    <div class="command-list">
+                        <div class="command"><span class="cmd">north</span> / <span class="cmd">n</span> - Move north</div>
+                        <div class="command"><span class="cmd">south</span> / <span class="cmd">s</span> - Move south</div>
+                        <div class="command"><span class="cmd">east</span> / <span class="cmd">e</span> - Move east</div>
+                        <div class="command"><span class="cmd">west</span> / <span class="cmd">w</span> - Move west</div>
+                        <div class="command"><span class="cmd">look</span> - Look around the current area</div>
+                        <div class="command"><span class="cmd">map</span> - Display the area map</div>
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3>NPC INTERACTION</h3>
+                    <div class="command-list">
+                        <div class="command"><span class="cmd">talk [npc]</span> - Talk to an NPC</div>
+                        <div class="command"><span class="cmd">ask [topic]</span> - Ask about a specific topic</div>
+                        <div class="command"><span class="cmd">trade [npc]</span> - Trade with a merchant</div>
+                        <div class="command"><span class="cmd">buy [item] [qty]</span> - Buy items from merchant</div>
+                        <div class="command"><span class="cmd">sell [item] [qty]</span> - Sell items to merchant</div>
+                        <div class="command"><span class="cmd">exit</span> - Exit trading</div>
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3>INVENTORY</h3>
+                    <div class="command-list">
+                        <div class="command"><span class="cmd">inventory</span> / <span class="cmd">inv</span> - View your inventory</div>
+                        <div class="command"><span class="cmd">use [item]</span> - Use an item</div>
+                        <div class="command"><span class="cmd">equip [item]</span> - Equip a weapon or armor</div>
+                        <div class="command"><span class="cmd">unequip [item]</span> - Unequip an item</div>
+                        <div class="command"><span class="cmd">drop [item]</span> - Drop an item</div>
+                        <div class="command"><span class="cmd">take [item]</span> / <span class="cmd">get [item]</span> - Pick up an item</div>
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3>COMBAT</h3>
+                    <div class="command-list">
+                        <div class="command"><span class="cmd">attack</span> - Attack the enemy</div>
+                        <div class="command"><span class="cmd">flee</span> / <span class="cmd">run</span> - Attempt to flee from combat</div>
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3>DEBUG COMMANDS (Development)</h3>
+                    <div class="command-list">
+                        <div class="command"><span class="cmd">/heal</span> - Restore full HP and MP</div>
+                        <div class="command"><span class="cmd">/damage [n]</span> - Take n damage</div>
+                        <div class="command"><span class="cmd">/give [item]</span> - Add item to inventory</div>
+                        <div class="command"><span class="cmd">/gold [n]</span> - Add n gold</div>
+                        <div class="command"><span class="cmd">/spawn [enemy]</span> - Spawn an enemy for combat</div>
+                        <div class="command"><span class="cmd">/debug</span> - Toggle debug mode</div>
+                        <div class="command"><span class="cmd">/reset</span> - Reset game state</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
